@@ -1,0 +1,53 @@
+
+<head>
+<script src="js/codemirror.js"></script>
+<link rel="stylesheet" href="css/codemirror.css">
+<link rel="stylesheet" href="css/paraiso-dark.css">
+<script src="js/javascript.js"></script>
+<script src="js/jquery.min.js"></script>
+<script src="js/aerogear.js"></script>
+<style type="text/css">
+      .CodeMirror {border: 1px solid black; font-size:8px}
+</style>
+</head>
+<body>
+<div><textarea id="code" name="code">
+// Pipes
+foaasPipe = AeroGear.Pipeline({
+      name : "off",
+      settings : {
+        baseURL : "http://foaas.com/",
+        authenticator : this.restAuth
+      }
+    }).pipes.off;
+
+foaasPipe.read({
+   id: "windows",
+   success: function( data ) {
+    alert(data.message + " " + data.subtitle);
+ }
+
+});
+
+</textarea></div>
+<div>
+<input type="button" value="Run !" onClick="run();"/>
+</div>   
+    <script>
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+        lineNumbers: false,
+        matchBrackets: true,
+        continueComments: "Enter",
+        extraKeys: {"Ctrl-Q": "toggleComment"}
+      });
+      editor.setOption("theme", "paraiso-dark");
+
+      function run(){
+      var js = editor.getValue();
+      var s = document.createElement('script');
+      s.textContent = js;//inne
+      document.body.appendChild(s);
+      }
+    </script>
+ </body>
+ </html>
