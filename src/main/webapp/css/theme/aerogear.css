@@ -14,8 +14,11 @@
  * GLOBAL STYLES
  *********************************************/
 body {
-  background-image: url("img/rvl-bg-large.jpg");
-  background-position: left bottom; }
+  background-image: url("img/aerogear_logo.png");
+  background-color: #ac31fc ;
+  background-position: left bottom;
+  background-repeat:no-repeat;
+}
 .reveal .CodeMirror div {
   font-size: 20px;
   line-height:1;

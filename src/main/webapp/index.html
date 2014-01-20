@@ -163,7 +163,7 @@
             </div>
             <div class="span8" >
                 <div style="color: #E25027;font-size: 35px;text-align: center">2: Et Cordova dans tout ça?</div>
-                <div style="color: #00436F;font-size: 20px;text-align: center">Développe en JS et deploy multi-stores</div> <hr/>
+                <div style="color: #00436F;font-size: 20px;text-align: center">Développe en JS et déploie multi-stores</div> <hr/>
                 <div style="color: #E25027;font-size: 35px;text-align: center">3: Les fonctionalités cross-platform</div>
                 <div style="color: #00436F;font-size: 20px;text-align: center">Unified Push / Security / Sync</div><hr>
                 <div style="color: #E25027;font-size: 35px;text-align: center">Conclusion</div>
@@ -448,7 +448,7 @@
         <hr>
         <div class="jumbotron">
             <h2><span style="color:#E25027">Demo:</span> Une p'tite recette?</h2>
-            <p style="color:#00436F;font-size: 30px">meet the team with <span style="color:#E25027">Buddies</span> app</p>
+            <p style="color:#00436F;font-size: 30px">Fait connaissance avec l'équipe AeroGear grace à <span style="color:#E25027">Buddies</span> app</p>
         </div>
         <hr>
     </div>
@@ -491,6 +491,28 @@
     <div class="container-narrow">
         <hr>
         <div class="jumbotron">
+            <h2>Les différents types de Stores</h2>
+        </div>
+        <hr>
+    </div>
+
+    <div class="row-fluid marketing">
+        <div class="span2">
+        </div>
+        <div class="span8">
+            <br/>
+            <img src="images/encrypted_stores.png"/>
+
+        </div>
+        <div class="span2">
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="container-narrow">
+        <hr>
+        <div class="jumbotron">
             <h2>Les Stores en <span style="color:#E25027">JavaScript</span></h2>
         </div>
         <hr>
@@ -502,22 +524,14 @@
         </div>
         <div class="span7">
      <pre><code style="font-size: 14px" class="language-javascript">
-         // Pipes
-         var memberPipe  = AeroGear.Pipeline([{
-         name: "members",
-         settings: {
-         baseURL: "rest/"
-         }
-         }]).pipes.members;
 
-         memberPipe.read({
-         success: function( data ) {
-         ...
-         $("#members").html(buildMemberRows());
-         }
-         });
      </code></pre>
-
+      var dm = AeroGear.DataManager("membersStore");
+      var myStore = dm.stores["membersStore"];
+      myStore.save({"id":1,"name":"Seb"});
+      var person = myStore.read()[0];
+      alert(person.name);
+            </pre></code>
         </div>
         <div class="span2">
         </div>
@@ -538,19 +552,17 @@
         </div>
         <div class="span7">
      <pre><code style="font-size: 14px" class="language-java">
-         Pipeline pipeline = new Pipeline("http://www.server.com");
-         pipeline.pipe(Member.class);
+  StoreConfig memoryStoreConfig = new StoreConfig();
+  memoryStoreConfig.setContext(getApplicationContext());
+  memoryStoreConfig.setType(MEMORY);
+  memoryStoreConfig.setKlass(Data.class);
 
-         LoaderPipe&lt;Member&gt; pipe = pipeline.get("member", this);
-         pipe.read(new AbstractActivityCallback&lt;List&lt;Member&gt;&gt;() {
-         void onSuccess(List&lt;Member&gt;> data) {
-         ListActivity activity = (ListActivity) getActivity();
-         activity.setListAdapter(....);
-         }
-         void onFailure(Exception e){
-         //Gracefully handle the exception
-         }
-         });
+  Store store = dataManager.store("memoryStore",
+                                  memoryStoreConfig);
+
+  Data data = new Data(10, "name", "description");
+  store.save(data);
+  Data readData = store.read(10);
      </code></pre>
 
         </div>
@@ -575,20 +587,20 @@
         </div>
         <div class="span8">
      <pre><code style="font-size: 14px" class="language-clike">
-         NSURL* projectsURL = [NSURL URLWithString:@"http://www.server.com"];
-         AGPipeline *server = [AGPipeline pipelineWithBaseURL:projectsURL];
+  NSString* type = @"SQLITE"; //@"PLIST";
+  AGDataManager* dm = [AGDataManager manager];
+  // Add a new (default) store object:
+  _store = [dm store:^(id<AGStoreConfig> config) {
+    [config setName:@"recipes"];
+    [config setType:type];
+  }];
 
-         // create the 'Pipe' that will point to the remote '/developer/' endpoint
-         id<AGPipe> developerPipe = [server pipe:^(id<AGPipeConfig> config) {
-         [config setName:@"/team/developers"];
-         }];
-
-         [developerPipe read:^(id responseObject) {
-         _data= responseObject;
-         [self.tableView reloadData];
-         } failure:^(NSError *error) {
-         NSLog(@"An error has occured during pipe read! \n%@", error);
-         }];
+  _recipes = [[NSMutableArray alloc] init];
+  NSArray* myRecipes = [_store readAll];
+  for (id item in myRecipes) {
+    AGRecipe *rec = [[AGRecipe alloc] initWithDictionary:item];
+    [_recipes addObject:rec];
+  }
      </code></pre>
 
         </div>
@@ -611,6 +623,48 @@
         <div class="span2">
         </div>
         <div class="span8">
+            <img src="images/recipe_cookbook.png"/>
+        </div>
+        <div class="span2">
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="container-narrow">
+        <hr>
+        <div class="jumbotron">
+            <h2>Encryption</h2>
+            <p style="color:#00436F;font-size: 30px">garder vos données sur votre portable <span style="color:#E25027">sécurisée</span></p>
+        </div>
+        <hr>
+    </div>
+
+    <div class="row-fluid marketing">
+        <div class="span2">
+        </div>
+        <div class="span8">
+            <img width="50%" src="images/secure.jpg"/>
+        </div>
+        <div class="span2">
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="container-narrow">
+        <hr>
+        <div class="jumbotron">
+            <h2>Encryption - les algos</h2>
+            <p style="color:#00436F;font-size: 30px">garder vos données sur votre portable <span style="color:#E25027">sécurisées</span></p>
+        </div>
+        <hr>
+    </div>
+
+    <div class="row-fluid marketing">
+        <div class="span2">
+        </div>
+        <div class="span8">
             <br/>
             <img src="images/data-storage.gif"/>
 
@@ -620,42 +674,243 @@
     </div>
 </section>
 
-<!--<section>-->
-    <!--<h2>JavaScript</h2>-->
-    <!--<textarea id="code1" name="code1" class="snippet">-->
-        <!--var dm = AeroGear.DataManager( "membersStore" );-->
-        <!--var myStore = dm.stores["membersStore"];-->
-        <!--myStore.save({"id":1,"name":"Seb"});-->
-        <!--var person = myStore.read()[0];-->
-        <!--alert(person.name);-->
-    <!--</textarea>-->
-    <!--<input type="button" value="Run !" onClick="run1();" />-->
-<!--</section>-->
-<!--<section>-->
-    <!--<h2>Android</h2>-->
-    <!--<textarea id="code5" name="code5" class="snippet">-->
-        <!--Store store = dataManager.store("sqlStore", sqlStoreConfig);-->
-        <!--((SQLStore))store).open(/*callback*/);-->
+<section>
+    <div class="container-narrow">
+        <hr>
+        <div class="jumbotron">
+            <h2>L'encryption en <span style="color:#E25027">JavaScript</span></h2>
+        </div>
+        <hr>
+    </div>
 
-        <!--Data data = new Data(10, "name", "description");//Id, name, description-->
-        <!--store.save(data);-->
-        <!--Data readData = store.read(10);-->
-    <!--</textarea>-->
-<!--</section>-->
-<!--<section>-->
-    <!--<h2>iOS</h2>-->
-    <!--<textarea id="code2" name="code2" class="snippet">-->
-        <!--// create the datamanager-->
-        <!--AGDataManager* dm = [AGDataManager manager];-->
-        <!--// add a new (default) store object:-->
-        <!--id<AGStore> myStore = [dm store:^(id<AGStoreConfig> config) {-->
-        <!--[config setName:@"tasks"];-->
-        <!--}];-->
+    <div class="row-fluid marketing">
+        <div class="span3">
+            <img src="images/js-logo.png"/>
+        </div>
+        <div class="span7">
+     <pre><code style="font-size: 14px" class="language-javascript">
 
-        <!--id<AGPipe> tasksPipe = [todo get:@"tasks"];-->
+     </code></pre>
 
-    <!--</textarea>-->
-<!--</section>-->
+        </div>
+        <div class="span2">
+        </div>
+    </div>
+</section>
+<section>
+    <div class="container-narrow">
+        <hr>
+        <div class="jumbotron">
+            <h2>L'encryption pour <span style="color:#E25027">Android</span></h2>
+        </div>
+        <hr>
+    </div>
+
+    <div class="row-fluid marketing">
+        <div class="span3">
+            <img src="images/library_android.png"/>
+        </div>
+        <div class="span7">
+     <pre><code style="font-size: 14px" class="language-java">
+
+
+     </code></pre>
+
+        </div>
+        <div class="span2">
+        </div>
+    </div>
+</section>
+
+
+<section>
+    <div class="container-narrow">
+        <hr>
+        <div class="jumbotron">
+            <h2>L'encryption pour <span style="color:#E25027">iOS</span></h2>
+        </div>
+        <hr>
+    </div>
+
+    <div class="row-fluid marketing">
+        <div class="span3">
+            <img src="images/ios-logo.png"/>
+        </div>
+        <div class="span8">
+     <pre><code style="font-size: 14px" class="language-clike">
+
+     </code></pre>
+
+        </div>
+        <div class="span1">
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="container-narrow">
+        <hr>
+        <div class="jumbotron">
+            <h2><span style="color:#E25027">Demo:</span> Une p'tite recette?</h2>
+            <p style="color:#00436F;font-size: 30px">une liste de Noel secréte <span style="color:#E25027">Xmas</span> app</p>
+        </div>
+        <hr>
+    </div>
+
+    <div class="row-fluid marketing">
+        <div class="span2">
+        </div>
+        <div class="span8">
+            <br/>
+            <img src="images/xmas-flow.png"/>
+
+        </div>
+        <div class="span2">
+        </div>
+    </div>
+</section>
+
+
+<section>
+    <div class="container-narrow">
+        <hr>
+        <div class="jumbotron">
+            <h2>Encryption</h2>
+            <p style="color:#00436F;font-size: 30px">garder vos données sur votre portable <span style="color:#E25027">sécurisée</span></p>
+        </div>
+        <hr>
+    </div>
+
+    <div class="row-fluid marketing">
+        <div class="span2">
+        </div>
+        <div class="span8">
+            <img width="50%" src="images/secure.jpg"/>
+        </div>
+        <div class="span2">
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="container-narrow">
+        <hr>
+        <div class="jumbotron">
+            <h2>Authentification - Authorisation</h2>
+            <p style="color:#00436F;font-size: 30px"><span style="color:#E25027">Qui</span> vous êtes et <span style="color:#E25027">Quelles</span> donneées sont authorisées</p>
+            <p style="color:#00436F;font-size: 30px"><span style="color:#E25027">HTTP digest</span> / <span style="color:#E25027">OTP</span> / <span style="color:#E25027">OAuth2</span></p>
+        </div>
+        <hr>
+    </div>
+
+    <div class="row-fluid marketing">
+        <div class="span2">
+        </div>
+        <div class="span8">
+            <br/>
+            <img src="images/data-storage.gif"/>
+
+        </div>
+        <div class="span2">
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="container-narrow">
+        <hr>
+        <div class="jumbotron">
+            <h2>L'encryption en <span style="color:#E25027">JavaScript</span></h2>
+        </div>
+        <hr>
+    </div>
+
+    <div class="row-fluid marketing">
+        <div class="span3">
+            <img src="images/js-logo.png"/>
+        </div>
+        <div class="span7">
+     <pre><code style="font-size: 14px" class="language-javascript">
+
+     </code></pre>
+
+        </div>
+        <div class="span2">
+        </div>
+    </div>
+</section>
+<section>
+    <div class="container-narrow">
+        <hr>
+        <div class="jumbotron">
+            <h2>L'encryption pour <span style="color:#E25027">Android</span></h2>
+        </div>
+        <hr>
+    </div>
+
+    <div class="row-fluid marketing">
+        <div class="span3">
+            <img src="images/library_android.png"/>
+        </div>
+        <div class="span7">
+     <pre><code style="font-size: 14px" class="language-java">
+
+
+     </code></pre>
+
+        </div>
+        <div class="span2">
+        </div>
+    </div>
+</section>
+
+
+<section>
+    <div class="container-narrow">
+        <hr>
+        <div class="jumbotron">
+            <h2>L'encryption pour <span style="color:#E25027">iOS</span></h2>
+        </div>
+        <hr>
+    </div>
+
+    <div class="row-fluid marketing">
+        <div class="span3">
+            <img src="images/ios-logo.png"/>
+        </div>
+        <div class="span8">
+     <pre><code style="font-size: 14px" class="language-clike">
+
+     </code></pre>
+
+        </div>
+        <div class="span1">
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="container-narrow">
+        <hr>
+        <div class="jumbotron">
+            <h2><span style="color:#E25027">Demo:</span> Une p'tite recette?</h2>
+            <p style="color:#00436F;font-size: 30px">une liste de Noel secréte <span style="color:#E25027">Xmas</span> app</p>
+        </div>
+        <hr>
+    </div>
+
+    <div class="row-fluid marketing">
+        <div class="span2">
+        </div>
+        <div class="span8">
+            <br/>
+            <img src="images/xmas-flow.png"/>
+
+        </div>
+        <div class="span2">
+        </div>
+    </div>
+</section>
 
 
 <section>
