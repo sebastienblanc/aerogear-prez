@@ -1,0 +1,30 @@
+# Grails
+target
+*.log
+/*.zip
+/plugin.xml
+*.db
+
+# IntelliJ stuff
+.idea
+*.ipr
+*.iml
+*.iws
+/out
+
+# eclipse
+target-eclipse
+.project
+.classpath
+.settings
+
+.DS_Store
+*/.DS_Store
+
+lib/lift-json.jar
+lib/plugins
+lib/scala*.jar
+lib/continuation*.jar
+
+/node_modules
+/dist
