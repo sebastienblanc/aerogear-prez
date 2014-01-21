@@ -974,7 +974,7 @@ pipeline.add([{ name: "files", settings: {
             <h2>2: Et Cordova dans tout ça?</h2><br/>
             <p style="font-size:30px;color:#E25027">son autre petit nom PhoneGap</p>
             <p style="font-size:30px;color:#00436F">utilise le support Web pour développer</p>
-            <p style="font-size:30px;color:#E25027">et deploie sur tous les stores</p>
+            <p style="font-size:30px;color:#E25027">et déploie sur tous les stores</p>
         </div>
         <hr>
     </div>
@@ -992,30 +992,51 @@ pipeline.add([{ name: "files", settings: {
 
 <section>
     <h2>Apache Cordova</h2>
-    <ol>
-        <li>embedded browser in native app</li>
-        <li>bridge between browser and native</li>
-        <li>DEV => writes web app</li>
-        <li>packages web app with the native code</li>
-        <li>no device specific compile (of web app)</li>
-        <li>PLUGINS: between layers!</li>
+    <ol style="font-size:30px;color:#00436F">
+        <li>Embarque un navigateur dans <span style="color:#E25027;">app native</span></li>
+        <li><span style="color:#E25027;">Passerelle</span> entre appli web et appli native</li>
+        <li>Permet d'écrire en JS une <span style="color:#E25027;">seule fois</span> et <span style="color:#E25027;">déploie partout</span></li>
+        <li><span style="color:#E25027;">Encapsule</span> les applications web dans du code natif</li>
+        <li>Compile en une commande pour toutes les platformes</li>
+        <li>S'étend facilement grace à son architecture <span style="color:#E25027;">PLUGIN</span>!</li>
     </ol>
     <p>&nbsp;</p>
     <p style="color: red;"><3</p>
 </section>
 
 <section>
-    <h2>Apache Cordova and AeroGear</h2>
+    <h2>Apache <span style="color:#E25027;">Cordova</span> + <span style="color:#E25027;">AeroGear</span> = <span style="color:#E25027;"><3</span></h2>
     <ol>
         <li>AeroGear Cordova plugins</li>
         <li>Cordova tooling</li>
         <li>Core commiter</li>
     </ol>
-    <p>&nbsp;</p>
-    <p style="color: red;"><3</p>
 </section>
 
+<section>
+    <div class="container-narrow">
+        <hr>
+        <div class="jumbotron">
+            <h2><span style="color:#E25027">Demo:</span> Magie en 4 commandes</h2>
+        </div>
+        <hr>
+    </div>
 
+    <div class="row-fluid marketing">
+        <div class="span2">
+        </div>
+        <div class="span8">
+            <pre><code style="font-size: 14px" class="language-clike">
+            cordova create marsjugApp
+            cordova platform add ios
+            cordova build
+            cordova run ios
+                </pre></code>
+        </div>
+        <div class="span2">
+        </div>
+    </div>
+</section>
 <section>
     <div class="container-narrow">
         <hr>
@@ -1042,7 +1063,7 @@ pipeline.add([{ name: "files", settings: {
 </section>
 
 <section>
-    <h2>Push Notifications</h2>
+    <h2>Les Notifications <span style="color:#E25027;">Push</span></h2>
     <ul>
         <li>Small messages for <i>notifications</i>!</li>
         <li>No custom connection to maintain:</li>
@@ -1055,7 +1076,7 @@ pipeline.add([{ name: "files", settings: {
 </section>
 
 <section>
-    <h2>Apple Push Notification Service</h2>
+    <h2><span style="color:#E25027;">Apple</span> Push Notification Service</h2>
     <ul>
         <li>iOS and Safari</li>
         <li>Production/Development environment</li>
@@ -1071,7 +1092,7 @@ pipeline.add([{ name: "files", settings: {
 
 
 <section>
-    <h2>Google Cloud Messaging</h2>
+    <h2><span style="color:#E25027;">Google</span> Cloud Messaging</h2>
     <ul>
         <li>(Google) Android and Chrome</li>
         <li>Simple setup (SenderID + Google API Key)</li>
@@ -1086,7 +1107,7 @@ pipeline.add([{ name: "files", settings: {
 </section>
 
 <section>
-    <h2>Mozilla SimplePush</h2>
+    <h2><span style="color:#E25027;">Mozilla</span> SimplePush</h2>
     <ul>
         <li>FirefoxOS and Firefox Desktop</li>
         <li>Signaling/notification system (not message carrying)</li>
@@ -1104,37 +1125,34 @@ pipeline.add([{ name: "files", settings: {
 <section>
     <h2>Mozilla SimplePush</h2>
     Vanilla Java (HttpUrlConnection)
-                    <pre><code>
-                        HttpURLConnection conn = null;
-                        try {
-                        // put() creates a PUT-enabled HttpURLConnection
-
-                        // only version, no actual data!
-                        conn = this.put("https://push.service.moz.org", "version=123");
-                        int simplePushStatusCode = conn.getResponseCode();
-                        ...
-                        } catch (IOException e) {
-                        logger.log(Level.SEVERE,...);
-                        } finally {
-                        // tear down
-                        if (conn != null ) {
-                        conn.disconnect();
-                        }
-                        }
+                    <pre><code class="language-java">
+HttpURLConnection conn = null;
+try {
+  // put() creates a PUT-enabled HttpURLConnection
+  // only version, no actual data!
+  conn = this.put("https://push.service.moz.org", "version=123");
+  int simplePushStatusCode = conn.getResponseCode();
+  ...
+} catch (IOException e) {
+  logger.log(Level.SEVERE,...);
+} finally {
+  // tear down
+  if (conn != null ) {
+    conn.disconnect();
+  }
+}
                     </code></pre>
 </section>
 <section>
     <h2>Mozilla SimplePush</h2>
     The receiving JavaScript client:
-                    <pre><code>
-                        // set message handler for 'push' events in FFOS:
-                        navigator.setMessageHandler('push', function(message) {
-                        // ZOMG! Business Messagereceived.
-                        if (message.pushEndpoint === myEndpoint)
-                        triggerCallToBackend(message.version);
-                        });
-
-                    </code></pre>
+                    <pre><code class="language-java">
+// set message handler for 'push' events in FFOS:
+navigator.setMessageHandler('push', function(message) {
+  // ZOMG! Business Messagereceived.
+  if (message.pushEndpoint === myEndpoint)
+    triggerCallToBackend(message.version);
+  });</code></pre>
 </section>
 <section>
     <img src="images/aerogear_unified_push_server.png" />
@@ -1149,6 +1167,28 @@ pipeline.add([{ name: "files", settings: {
         <li>OpenShift Cartridge</li>
     </ul>
 </section>
+
+<section>
+    <div class="container-narrow">
+        <hr>
+        <div class="jumbotron">
+            <h2><span style="color:#E25027">Demo:</span> AeroDoc</h2>
+            <p style="color:#00436F;font-size: 30px">Une appli pour commerciaux pour gérer les nouveaux <span style="color:#E25027">contracts</span></p>
+        </div>
+        <hr>
+    </div>
+
+    <div class="row-fluid marketing">
+        <div class="span2">
+        </div>
+        <div class="span8">
+            <img src="images/aerodoc.png"/>
+        </div>
+        <div class="span2">
+        </div>
+    </div>
+</section>
+
 <section>
     <h1>Security</h1>
     <ul>
@@ -1158,9 +1198,30 @@ pipeline.add([{ name: "files", settings: {
         <li>OTP</li>
     </ul>
 </section>
+
+
 <section>
-    <h1>Tooling</h1>
+    <div class="container-narrow">
+        <hr>
+        <div class="jumbotron">
+            <h2>Conclusion</h2>
+            <p style="font-size:30px;color:#00436F">Parlons <span style="font-size:30px;color:#E25027">tooling</span> pour vous aider</p>
+            <p style="font-size:30px;color:#00436F">Deux mots sur la <span style="font-size:30px;color:#E25027">roadmap</span></p>
+        </div>
+        <hr>
+    </div>
+
+    <div class="row-fluid marketing">
+        <div class="span2">
+        </div>
+        <div class="span8">
+            <img width="50%" src="images/conclusion.gif"/>
+        </div>
+        <div class="span2">
+        </div>
+    </div>
 </section>
+
 <section>
     <h1>JBoss Developpers Tools</h1>
     <img src="images/jbosstools.png" />
@@ -1177,26 +1238,18 @@ pipeline.add([{ name: "files", settings: {
         <li>Offline support</li>
     </ul>
 </section>
-<section>
-    <h1>THANK YOU</h1>
-    <h3>sblanc AT redhat DOT com</h3>
-    <p>Find us:</p>
-    <ul>
-        <li>http://aerogear.org</li>
-        <li>@AeroGears</li>
-        <li>IRC: #aerogear</li>
-        <li>MAILING LIST</li>
-        <ul>
-            <li>http://aerogear.org/community/</li>
-        </ul>
-    </ul>
-</section>
 
-<!--<section>-->
-<!--<h2> Mailing List / IRC</h2>-->
-<!--<h2> Tutorials / ShowCase apps / Cookbooks</h2>-->
-<!--<h2> Cross project implications</h2>-->
-<!--</section>-->
+<section>
+    <h2>THANK YOU</h2>
+    <h3>and See you Saturday</h3>
+    <p style="font-size:30px;color:#00436F"><span style="font-size:30px;color:#E25027">@sblanc</span> and <span style="font-size:30px;color:#E25027">@corinnekrych</span></p>
+
+        <a href="http://aerogear.org">http://aerogear.org</a> <br/>
+        <a href="">@AeroGears</a><br/>
+        <a href="">IRC: #aerogear</a> <br/>
+        <a href="http://aerogear.org/community/">MAILING LIST</a>
+
+</section>
 
 </div>
 
