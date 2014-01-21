@@ -323,7 +323,7 @@
             <br/>
             <h2>Le cookbook</h2>
             <p style="color:#00436F;font-size: 30px">Il y a des recettes pour toutes les <span style="color:#E25027">fonctionalités</span></p>
-            <p style="color:#00436F;font-size: 30px">et toutes les <span style="color:#E25027">platformes</span> bien sur!</p>
+            <p style="color:#00436F;font-size: 30px">et toutes les <span style="color:#E25027">plateformes</span> bien sure!</p>
             <p style="color:#00436F;font-size: 30px"><a href="https://github.com/aerogear/aerogear-ios-cookbook">aerogear-ios-cookbook</a><br/> <span style="color:#E25027"><a href="https://github.com/aerogear/aerogear-js-cookbook">aerogear-js-cookbook</a><br/></span> <a href="https://github.com/aerogear/aerogear-android-cookbook">aerogear-android-cookbook</a><br/></p>
             <hr>
         </div>
@@ -828,7 +828,7 @@
     <div class="container-narrow">
         <hr>
         <div class="jumbotron">
-            <h2>Authentification - Authorisation</h2>
+            <h2>Authentification - Autorisation</h2>
             <p style="color:#00436F;font-size: 30px"><span style="color:#E25027">Qui</span> vous êtes et <span style="color:#E25027">Quelles</span> données sont autorisées</p>
             <p style="color:#00436F;font-size: 30px"><span style="color:#E25027">HTTP digest</span> / <span style="color:#E25027">OTP</span> / <span style="color:#E25027">OAuth2</span></p>
         </div>
@@ -1065,28 +1065,29 @@ pipeline.add([{ name: "files", settings: {
 <section>
     <h2>Les Notifications <span style="color:#E25027;">Push</span></h2>
     <ul>
-        <li>Small messages for <i>notifications</i>!</li>
-        <li>No custom connection to maintain:</li>
+        <li>Message court pour <i>notifier</i>!</li>
+        <li>Pas de connection à maintenir:</li>
         <ul>
-            <li>Device "phones" home...</li>
-            <li>Multiplexing over one connection to the actual Push Network</li>
+            <li>Le terminal s'enregistre auprès de l'UPS</li>
+            <li>UPS se charge de contacter le réseau de Push</li>
         </ul>
-        <li>Platform specific APIs to read the notification!</li>
+        <li>API Cliente Unifiée pour s'enregistrer et lire les messages</li>
     </ul>
+    <img src="images/push.png" width="200"/>
 </section>
 
 <section>
     <h2><span style="color:#E25027;">Apple</span> Push Notification Service</h2>
     <ul>
-        <li>iOS and Safari</li>
+        <li>iOS et Safari</li>
         <li>Production/Development environment</li>
-        <li>Complex setup</li>
+        <li>Mise en place complexe</li>
         <ul>
             <li>Provisioning Profile(s)</li>
             <li>SSL Certificate(s)</li>
         </ul>
-        <li>Device identified by <code style="background-color:gray">deviceToken</code></li>
-        <li>very simple client APIs</li>
+        <li>Terminal identifié par le <code style="background-color:gray">deviceToken</code></li>
+        <li>APIs Cliente facile d'accès</li>
     </ul>
 </section>
 
@@ -1095,12 +1096,12 @@ pipeline.add([{ name: "files", settings: {
     <h2><span style="color:#E25027;">Google</span> Cloud Messaging</h2>
     <ul>
         <li>(Google) Android and Chrome</li>
-        <li>Simple setup (SenderID + Google API Key)</li>
-        <li>Device identified by <code style="background-color:gray">registrationID</code></li>
-        <li>complex handling on Android:</li>
+        <li>Mise en place simple (SenderID + Google API Key)</li>
+        <li>Terminal identifié par le <code style="background-color:gray">registrationID</code></li>
+        <li>Partie client plus complexe:</li>
         <ul>
-            <li>lot's of XML (Manifest) to write</li>
-            <li>lot's of Android code to implement</li>
+            <li>Beaucoup (trop!) d'XML : Manifestes</li>
+            <li>Pas mal d'interface á implementer</li>
         </ul>
     </ul>
 
@@ -1109,50 +1110,35 @@ pipeline.add([{ name: "files", settings: {
 <section>
     <h2><span style="color:#E25027;">Mozilla</span> SimplePush</h2>
     <ul>
-        <li>FirefoxOS and Firefox Desktop</li>
-        <li>Signaling/notification system (not message carrying)</li>
+        <li>FirefoxOS et Firefox Desktop</li>
+        <li>Signalisation/Notification (pas de transport de message)</li>
         <li>PUB / SUB</li>
-        <li>Subscriptions identified by <code style="background-color:gray">channelID</code></li>
-        <li>Mozilla "spec" due to W3C’s Push-API issues</li>
+        <li>Subscriptions identifié par le <code style="background-color:gray">channelID</code></li>
+        <li>Mozilla "spec" car la W3C Push-API craint</li>
         <ul>
-            <li>Protocol defined (Ref. Server: written in Go)</li>
-            <li>JavaScript Client API defined</li>
+            <li>Protocole définit (Ref. Server: written in Go)</li>
+            <li>API JavaScript définit</li>
         </ul>
         <li>AeroGear Quickstart:</li>
         <li><a href="https://github.com/aerogear/aerogear-simplepush-quickstart/">https://github.com/aerogear/aerogear-simplepush-quickstart/</a></li>
     </ul>
 </section>
 <section>
-    <h2>Mozilla SimplePush</h2>
-    Vanilla Java (HttpUrlConnection)
-                    <pre><code class="language-java">
-HttpURLConnection conn = null;
-try {
-  // put() creates a PUT-enabled HttpURLConnection
-  // only version, no actual data!
-  conn = this.put("https://push.service.moz.org", "version=123");
-  int simplePushStatusCode = conn.getResponseCode();
-  ...
-} catch (IOException e) {
-  logger.log(Level.SEVERE,...);
-} finally {
-  // tear down
-  if (conn != null ) {
-    conn.disconnect();
-  }
-}
-                    </code></pre>
-</section>
-<section>
-    <h2>Mozilla SimplePush</h2>
-    The receiving JavaScript client:
-                    <pre><code class="language-java">
-// set message handler for 'push' events in FFOS:
-navigator.setMessageHandler('push', function(message) {
-  // ZOMG! Business Messagereceived.
-  if (message.pushEndpoint === myEndpoint)
-    triggerCallToBackend(message.version);
-  });</code></pre>
+    <h2>"Brancher" son backend avec le serveur de Push</h2>
+    <pre><code class="language-java">
+        JavaSender defaultJavaSender =
+  new SenderClient("http://localhost:8080/ag-push");
+  
+  UnifiedMessage unifiedMessage = new UnifiedMessage.Builder()
+                .pushApplicationId("c7fc6525-5506-4ca9-9cf1-55cc261ddb9c")
+                .masterSecret("8b2f43a9-23c8-44fe-bee9-d6b0af9e316b")
+                .aliases(Arrays.asList("john", "maria"))
+                .alert("Hello from Java Sender API!")
+                .sound("default")
+                .build();
+
+ defaultJavaSender.send(unifiedMessage, callback); 
+</code></pre>
 </section>
 <section>
     <img src="images/aerogear_unified_push_server.png" />
@@ -1163,7 +1149,7 @@ navigator.setMessageHandler('push', function(message) {
         <li>Simple Push Server (WAR, vertx)</li>
         <li>Client SDKs : JS, Android, iOS</li>
         <li>Sender Client : Java, NodeJS, PHP</li>
-        <li>Detailed tutorials</li>
+        <li>Tutoriaux détaillé</li>
         <li>OpenShift Cartridge</li>
     </ul>
 </section>
