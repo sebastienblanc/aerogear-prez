@@ -38,19 +38,7 @@
 <!-- Any section element inside of this container is displayed as a slide -->
 <div class="slides">
 <section>
-    <h1>AeroGear</h1>
-    <h2>Les librairies mobiles pour l'entreprise</h2>
-</section>
 
-<section>
-    <!--<div class="container-narrow">-->
-        <!--<hr>-->
-        <!--<div class="jumbotron">-->
-            <!--<h1>AeroGear</h1>-->
-            <!--<h2 style="color:#00436F">Les librairies <span style="color:#00436F">mobiles</span> pour l'<span style="color:#00436F">entreprise</span></h2>-->
-        <!--</div>-->
-        <!--<hr>-->
-    <!--</div>-->
      <hr/>
     <div class="row-fluid marketing">
         <div class="span2">
@@ -622,7 +610,7 @@
   NSString* type = @"SQLITE"; //@"PLIST";
   AGDataManager* dm = [AGDataManager manager];
   // Add a new (default) store object:
-  _store = [dm store:^(id<AGStoreConfig> config) {
+  _store = [dm store:^(id&lt;AGStoreConfig&gt; config) {
     [config setName:@"recipes"];
     [config setType:type];
   }];
@@ -697,7 +685,13 @@
         <div class="span2">
         </div>
         <div class="span8">
-            TODO
+            <p style="color:#00436F;font-size: 25px">Les différents algos supportés:</p>
+            <ul>
+                <li style="color:#00436F;font-size: 20px"><span style="color:#E25027">PBKDF2:</span> dérivation de key</li>
+                <li style="color:#00436F;font-size: 20px"><span style="color:#E25027">Galois/Counter Mode(GCM):</span> private key ou symmetric encryption</li>
+                <li style="color:#00436F;font-size: 20px"><span style="color:#E25027">Cipher Block Chaining (CBC):</span> private key ou symmetric encryption</li>
+                <li style="color:#00436F;font-size: 20px"><span style="color:#E25027">Elliptic Curve cryptography:</span> public/private key, asymmetric</li>
+            </ul>
 
         </div>
         <div class="span2">
@@ -720,7 +714,20 @@
         </div>
         <div class="span7">
      <pre><code style="font-size: 14px" class="language-javascript">
+  var rawPassword = AeroGear.Crypto().deriveKey( PASSWORD ),
+     utf8String = sjcl.codec.utf8String,
+     hex = sjcl.codec.hex,
+     cipherText,
+     options = {
+         IV: hex.toBits( BOB_IV ),
+         AAD: hex.toBits( BOB_AAD ),
+         key: rawPassword,
+         data: utf8String.toBits( PLAIN_TEXT )
+      };
 
+  cipherText = AeroGear.Crypto().encrypt( options );
+  options.data = cipherText;
+  plainText = AeroGear.Crypto().decrypt ( options );
      </code></pre>
 
         </div>
@@ -743,8 +750,11 @@
         </div>
         <div class="span7">
      <pre><code style="font-size: 14px" class="language-java">
-
-
+     CryptoBox cryptoBox = new CryptoBox(new PrivateKey(BOB_SECRET_KEY));
+     byte[] IV = HEX.decode(CRYPTOBOX_IV);
+     byte[] message = HEX.decode(CRYPTOBOX_MESSAGE);
+     byte[] ciphertext = HEX.decode(CRYPTOBOX_CIPHERTEXT);
+     byte[] result = cryptoBox.encrypt(IV, message);
      </code></pre>
 
         </div>
@@ -769,7 +779,19 @@
         </div>
         <div class="span8">
      <pre><code style="font-size: 14px" class="language-clike">
+ // Generate key from pasword
+ AGPBKDF2* derivator = [[AGPBKDF2 alloc] init]
+ NSData* key = [derivator deriveKey:password salt:_salt];
 
+ // Use CryptoBox to encrypt/decrypt data
+ AGCryptoBox* cryptoBox = [[AGCryptoBox alloc] initWithKey:key];
+
+ // transform string to data
+ NSData* dataToEncrypt = [@"My text to encrypt"
+         dataUsingEncoding:NSUTF8StringEncoding];
+
+ // encrypt data
+ NSData* encryptedData = [cryptoBox encrypt:dataToEncrypt IV:_IV];
      </code></pre>
 
         </div>
@@ -840,9 +862,23 @@
             <img src="images/js-logo.png"/>
         </div>
         <div class="span7">
-     <pre><code style="font-size: 14px" class="language-javascript">
-
-     </code></pre>
+     <pre><code style="font-size: 14px" class="language-javascript">var pipeline, filesPipe, authWindow, timer, authURL, callback,
+authz = AeroGear.Authorization();
+authz.add({
+  name: "drive",
+  settings: {
+    clientId: "1038594593085.apps.googleusercontent.com",
+    redirectURL: "http://localhost:9000/redirector.html",
+    authEndpoint: "https://accounts.google.com/o/oauth2/auth",
+    validationEndpoint: "https://www.googleapis.com/oauth2/v1/tokeninfo",
+    scopes: "https://www.googleapis.com/auth/drive"
+  }
+});
+pipeline = AeroGear.Pipeline( { authorizer: authz.services.drive } );
+pipeline.add([{ name: "files", settings: {
+     baseURL: "https://www.googleapis.com/drive/v2/"
+   }}]);
+ filesPipe = pipeline.pipes.files;</code></pre>
 
         </div>
         <div class="span2">
@@ -886,9 +922,21 @@
             <img src="images/ios-logo.png"/>
         </div>
         <div class="span8">
-     <pre><code style="font-size: 14px" class="language-clike">
+     <pre><code style="font-size: 14px" class="language-clike">  AGAuthorizer* authorizer = [AGAuthorizer authorizer];
 
-     </code></pre>
+  _restAuthzModule = [authorizer authz:^(id&lt;AGAuthzConfig&gt; config) {
+    config.name = @"restAuthMod";
+    config.baseURL = [[NSURL alloc] initWithString:@"https://accounts.google.com"];
+    config.authzEndpoint = @"/o/oauth2/auth";
+    config.accessTokenEndpoint = @"/o/oauth2/token";
+    config.clientId = @"XXXXX";
+    config.redirectURL = @"org.aerogear.GoogleDrive:/oauth2Callback";
+    config.scopes = @[@"https://www.googleapis.com/auth/drive"];
+  }];
+
+  [_restAuthzModule requestAccessSuccess:^(id object) {
+    [self fetchGoogleDriveDocuments:_restAuthzModule];
+   } failure:^(NSError *error) {...}];</code></pre>
 
         </div>
         <div class="span1">
@@ -1108,7 +1156,7 @@
         <li>Idendity Management (PicketLink)</li>
         <li>OAuth2</li>
         <li>OTP</li>
-</section>
+    </ul>
 </section>
 <section>
     <h1>Tooling</h1>
